@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação de Presença</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        .confirmation { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Confirmação de Presença</h1>
+        <p>Por favor, confirme sua presença no aniversário do [Nome do seu filho]!</p>
+        <form id="rsvpForm">
+            <label for="name">Nome:</label>
+            <input type="text" id="name" name="name" required><br><br>
+            <label for="attending">Você irá comparecer?</label>
+            <select id="attending" name="attending" required>
+                <option value="sim">Sim</option>
+                <option value="não">Não</option>
+            </select><br><br>
+            <button type="submit">Enviar</button>
+        </form>
+        <div class="confirmation" id="confirmation"></div>
+    </div>
+
+    <script>
+        document.getElementById('rsvpForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const attending = document.getElementById('attending').value;
+            document.getElementById('confirmation').innerText = `Obrigado, ${name}! Sua resposta foi registrada.`;
+            // Aqui você pode adicionar código para enviar os dados para um servidor ou salvar em um banco de dados
+        });
+    </script>
+</body>
+</html>
