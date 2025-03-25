@@ -13,12 +13,82 @@
         }
         body {
             font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #FFD54F 0%, #FF7043 100%);
+            background: linear-gradient(135deg, #87CEEB 0%, #4682B4 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .party-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .balloon {
+            position: absolute;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            opacity: 0.7;
+            animation: float-and-pop 15s linear infinite;
+        }
+        @keyframes float-and-pop {
+            0% { 
+                transform: translateY(100vh) scale(0.5);
+                opacity: 0;
+            }
+            50% { 
+                opacity: 0.7;
+            }
+            100% { 
+                transform: translateY(-10vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+        .party-particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: particle-float 10s linear infinite;
+        }
+        @keyframes particle-float {
+            0% { 
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0.6;
+            }
+            100% { 
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        .confirmation-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .confirmation-content {
+            background-color: rgba(0,0,0,0.8);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 100%;
         }
         .invite-container {
             background-color: white;
@@ -26,12 +96,14 @@
             box-shadow: 0 15px 30px rgba(0,0,0,0.2);
             max-width: 500px;
             width: 100%;
-            overflow: hidden;
+            max-height: 90vh;
+            overflow-y: auto;
             position: relative;
-            border: 5px solid #FF5722;
+            border: 5px solid #f54444;
+            z-index: 10;
         }
         .header {
-            background-color: #2196F3;
+            background-color: #8bc4df;
             color: white;
             text-align: center;
             padding: 20px;
@@ -44,7 +116,7 @@
             letter-spacing: 2px;
         }
         .age {
-            background-color: #FF5722;
+            background-color: #F54444;
             display: inline-block;
             padding: 8px 20px;
             border-radius: 20px;
@@ -63,11 +135,12 @@
             margin-top: 15px;
             font-size: 1.1em;
             line-height: 1.6;
-            color: #333;
+            color: #002064;
             padding: 0 20px;
+            text-align: justify;
         }
         .event-details {
-            background-color: #F1F8E9;
+            background-color: #fc910c;
             padding: 20px;
             margin: 20px;
             border-radius: 10px;
@@ -75,15 +148,31 @@
         }
         .event-highlight {
             font-weight: bold;
-            color: #FF5722;
+            color: #ffffff;
             font-size: 1.2em;
             margin-bottom: 10px;
         }
         .event-details p {
             margin-bottom: 8px;
         }
-        .rsvp-form {
+        .gift-list {
             background-color: #E3F2FD;
+            margin: 15px 20px;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+        }
+        .gift-list h3 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #F54444;
+        }
+        .gift-list ul {
+            list-style-type: disc;
+            padding-left: 30px;
+        }
+        .rsvp-form {
+            background-color: #FFF3E0;
             padding: 20px;
             margin: 20px;
             border-radius: 10px;
@@ -107,43 +196,17 @@
             cursor: pointer;
             font-size: 1.1em;
             transition: background-color 0.3s ease;
+            width: 100%;
         }
         .rsvp-form button:hover {
             background-color: #F4511E;
         }
-        .confirmation-message {
-            color: #4CAF50;
-            margin-top: 10px;
-            font-weight: bold;
-            font-size: 1.1em;
-        }
         .footer {
-            background-color: #2196F3;
-            color: white;
+            background-color: #8bc4df;
+            color: black;
             text-align: center;
             padding: 15px;
             margin-top: 20px;
-        }
-        .decorative-elements {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            overflow: hidden;
-        }
-        .tire {
-            position: absolute;
-            bottom: -30px;
-            right: -30px;
-            width: 100px;
-            height: 100px;
-            background-color: #333;
-            border-radius: 50%;
-            border: 10px solid #666;
-            transform: rotate(45deg);
         }
         .confetti {
             position: fixed;
@@ -178,10 +241,9 @@
     </style>
 </head>
 <body>
+    <div class="party-background" id="partyBackground"></div>
+
     <div class="invite-container">
-        <div class="decorative-elements">
-            <div class="tire"></div>
-        </div>
         <div class="header">
             <h1 class="name">Benjamin</h1>
             <div class="age">3 ANOS</div>
@@ -193,28 +255,39 @@
 
             <div class="event-details">
                 <p class="event-highlight">📅 Dia: 12 de Abril</p>
-                <p class="event-highlight">🕒 Horário: A partir das 14h</p>
-                <p>Local: Salão de Festas - Res. Splendya 2
-                R. Augusto dos Anjos, 155 - Melville Empresarial II
+                <p class="event-highlight">🕒 Horário: A partir das 14h</p><br>
+                <p>Local: Salão de Festas - Res. Splendya 2<br>
+                R. Augusto dos Anjos, 155 - Melville Empresarial II<br>
                 Barueri - SP, 06485-370</p>
             </div>
 
-            <p class="details">
-                Caso você queria me dar algum presentinho, aqui vão algumas dicas. Mas sinta-se a vontade para usar sua criatividade e o seu coração na escolha: roupas tam 4-5, sapatos 27, gosto muito de carrinhos, aviões, foguetes e dinossauros. Ainda não tenho brinquedos de montar, empilhar e encaixar e gosto muito de música também. Conto com a sua presença :)
-            </p>
+            <div class="gift-list">
+                <h3>Caso você queira me dar algum presentinho, aqui vão algumas dicas. Mas, sinta-se a vontade para usar sua criatividade e o seu coração na escolha:</h3>
+                <ul>
+                    <li>Estou usando roupas tam 4-5</li>
+                    <li>Meus sapatos já são tamanho 27</li>
+                    <li>Adoro carrinhos, VRUMMMMMM</li>
+                    <li>Quem não gosta de Aviões?</li>
+                    <li>Sou fascinado por Foguetes</li>
+                    <li>E os Dinossauros hein?</li>
+                    <li>Brinquedos de montar, empilhar e encaixar</li>
+                    <li>E eu gosto muito de música também</li>
+                </ul>
+            </div>
 
             <div class="rsvp-form">
                 <h2>Confirme sua Presença</h2>
-                <form id="rsvpForm">
-                    <input type="text" id="name" name="name" placeholder="Seu Nome" required>
-                    <select id="attending" name="attending" required>
+                <form id="rsvpForm" action="https://formspree.io/f/xkgjzooq" method="POST">
+                    <input type="text" name="name" placeholder="Seu Nome" required>
+                    <input type="tel" name="phone" placeholder="Seu Telefone" required>
+                    <select name="attending" required>
                         <option value="">Você vai participar?</option>
-                        <option value="sim">Sim, com certeza!</option>
-                        <option value="nao">Infelizmente não poderei ir</option>
+                        <option value="Sim">Sim, com certeza!</option>
+                        <option value="Não">Infelizmente não poderei ir</option>
                     </select>
-                    <button type="submit">Confirmar</button>
+                    <input type="number" name="guests" placeholder="Número de Convidados" min="1" required>
+                    <button type="submit">Confirmar Presença</button>
                 </form>
-                <div id="confirmationMessage" class="confirmation-message"></div>
             </div>
         </div>
         <div class="footer">
@@ -225,26 +298,89 @@
     <div class="confetti" id="confetti"></div>
 
     <script>
-        document.getElementById('rsvpForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const name = document.getElementById('name').value;
-            const attending = document.getElementById('attending').value;
-            const confirmationMessage = document.getElementById('confirmationMessage');
+        function createPartyBackground() {
+            const background = document.getElementById('partyBackground');
+            const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FDCB6E', '#6C5CE7'];
             
-            if (attending === 'sim') {
-                confirmationMessage.textContent = `Oba, ${name}! Que alegria que você vem! 🎉`;
-            } else {
-                confirmationMessage.textContent = `Que pena, ${name}. Sentiremos sua falta! 💕`;
+            // Criar balões
+            for (let i = 0; i < 20; i++) {
+                const balloon = document.createElement('div');
+                balloon.classList.add('balloon');
+                
+                balloon.style.width = (Math.random() * 50 + 20) + 'px';
+                balloon.style.height = (Math.random() * 50 + 20) + 'px';
+                balloon.style.left = Math.random() * 100 + '%';
+                balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                balloon.style.animationDelay = Math.random() * 10 + 's';
+                
+                background.appendChild(balloon);
             }
 
+            // Criar partículas
+            for (let i = 0; i < 100; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('party-particle');
+                
+                particle.style.width = (Math.random() * 10 + 2) + 'px';
+                particle.style.height = (Math.random() * 10 + 2) + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                
+                background.appendChild(particle);
+            }
+        }
+
+        // Iniciar animação de fundo
+        createPartyBackground();
+
+        document.getElementById('rsvpForm').addEventListener('submit', function(event) {
+            // Coleta os dados do formulário
+            const name = this.querySelector('input[name="name"]').value;
+            const attending = this.querySelector('select[name="attending"]').value;
+            
+            // Cria modal de confirmação
+            const confirmationModal = document.createElement('div');
+            confirmationModal.className = 'confirmation-modal';
+            
+            const confirmationContent = document.createElement('div');
+            confirmationContent.className = 'confirmation-content';
+            
+            if (attending === 'Sim') {
+                confirmationContent.innerHTML = `
+                    <h1 style="color: #4CAF50; margin-bottom: 20px;">Confirmação Recebida!</h1>
+                    <p style="font-size: 1.2em;">
+                        Olá, ${name}! 🎉<br>
+                        Sua presença foi confirmada para o aniversário do Benjamin!
+                    </p>
+                `;
+            } else {
+                confirmationContent.innerHTML = `
+                    <h1 style="color: #FF5722; margin-bottom: 20px;">Que pena!</h1>
+                    <p style="font-size: 1.2em;">
+                        Olá, ${name}! 💕<br>
+                        Infelizmente você não poderá comparecer ao aniversário do Benjamin.
+                    </p>
+                `;
+            }
+            
+            confirmationModal.appendChild(confirmationContent);
+            document.body.appendChild(confirmationModal);
+
+            // Cria confete
             createConfetti();
+
+            // Remove a modal após 4 segundos
+            setTimeout(() => {
+                document.body.removeChild(confirmationModal);
+            }, 4000);
         });
 
         function createConfetti() {
             const confettiContainer = document.getElementById('confetti');
             const colors = ['#FF5722', '#2196F3', '#4CAF50', '#FFC107'];
             
-            for (let i = 0; 0 < 100; i++) {
+            for (let i = 0; i < 100; i++) {
                 const confetti = document.createElement('div');
                 confetti.classList.add('confetti-piece');
                 
@@ -252,9 +388,8 @@
                 confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                 
                 confetti.style.animationDelay = Math.random() * 3 + 's';
-                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                
-                confettiContainer.appendChild(confetti);
+                confetti.style.animationDuration = (Math.random() * 2 + 1) + 's';
+                onfettiContainer.appendChild(confetti);
             }
 
             setTimeout(() => {
